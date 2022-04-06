@@ -3,6 +3,8 @@ Public Class Form1
     Dim myStudents As List(Of clsStudent)
 
     Public Sub populateList()
+        'make a new reference for student list
+        myStudents = New List(Of clsStudent)
         myStudents.Add(New clsStudent("V.A.", "Borstellis", {25, 25, 25, 25}, 100.0))
         myStudents.Add(New clsStudent("A.S.", "Reid", {20, 21, 20, 18}, 75.0))
         myStudents.Add(New clsStudent("C.U.", "Tyler", {19, 20, 21, 24}, 75.5))
@@ -37,7 +39,7 @@ Public Class Form1
 
         'see if excel is already open
         Try
-            CheckExcel = GetObject(, "Excel.Application")
+            '  CheckExcel = GetObject(, "Excel.Application")
         Catch ex As Exception
 
         End Try
@@ -67,18 +69,15 @@ Public Class Form1
         anExcelDoc.Cells(1, 8) = "Exam"
         anExcelDoc.Cells(1, 9) = "Final Grade"
 
-        'and since this subroutine is called after the students are loaded we can
-        'add the row titles for average, stdev, min and max.
-        anExcelDoc.Cells(2, myStudents.Count + 1) = "Aver:"
-        anExcelDoc.Cells(2, myStudents.Count + 2) = "St Dev:"
-        anExcelDoc.Cells(2, myStudents.Count + 3) = "Min:"
-        anExcelDoc.Cells(2, myStudents.Count + 4) = "Max:"
 
         Return anExcelDoc
     End Function
     Public Sub loadStudentData(anExcelDoc As Excel.Application)
-        For i As Integer = 2 To myStudents.Count + 2
-            Dim currStudent As clsStudent = myStudents(i)
+        'loop through each student in the list, we start at 2 for our loop counter since that will be the row
+        'we start entering data at. We then can just use our getter methods to get that data and place it in the cells
+        'the total grade and final grade are both functions that we place in the cells
+        For i As Integer = 2 To myStudents.Count + 1
+            Dim currStudent As clsStudent = myStudents(i - 2)
             anExcelDoc.Cells(i, 1) = currStudent.getInitials
             anExcelDoc.Cells(i, 2) = currStudent.getLastName
             anExcelDoc.Cells(i, 3) = (currStudent.getScores)(0)
@@ -87,12 +86,54 @@ Public Class Form1
             anExcelDoc.Cells(i, 6) = (currStudent.getScores)(3)
             anExcelDoc.Cells(i, 7) = String.Format("=SUM(C{0}:F{0})", i)
             anExcelDoc.Cells(i, 8) = currStudent.getExam
-            anExcelDoc.Cells(i, 9) = String.Format("=ROUND((0.4 * G{0}) + (0.6 * H{0}))")
+            anExcelDoc.Cells(i, 9) = String.Format("=ROUND((0.4 * G{0}) + (0.6 * H{0}), 1)", i)
         Next
+        'we can add row titles for statistics now to get it out of the way as well
+        anExcelDoc.Cells(myStudents.Count + 3, 2) = "Aver:"
+        anExcelDoc.Cells(myStudents.Count + 4, 2) = "St Dev:"
+        anExcelDoc.Cells(myStudents.Count + 5, 2) = "Min:"
+        anExcelDoc.Cells(myStudents.Count + 6, 2) = "Max:"
+    End Sub
+
+    Public Sub putStatisticalFormulas(anExcelDoc As Excel.Application)
+        'add in average, stdev, min and max functions in the corresponding cells
+        'all + 3 rows are for average
+        anExcelDoc.Cells(myStudents.Count + 3, 3) = String.Format("=AVERAGE(C2:C{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 3, 4) = String.Format("=AVERAGE(D2:D{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 3, 5) = String.Format("=AVERAGE(E2:E{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 3, 6) = String.Format("=AVERAGE(F2:F{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 3, 7) = String.Format("=AVERAGE(G2:G{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 3, 8) = String.Format("=AVERAGE(H2:H{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 3, 9) = String.Format("=AVERAGE(I2:I{0})", myStudents.Count + 1)
+        '+4 for stdev
+        anExcelDoc.Cells(myStudents.Count + 4, 3) = String.Format("=STDEV(C2:C{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 4, 4) = String.Format("=STDEV(D2:D{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 4, 5) = String.Format("=STDEV(E2:E{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 4, 6) = String.Format("=STDEV(F2:F{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 4, 7) = String.Format("=STDEV(G2:G{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 4, 8) = String.Format("=STDEV(H2:H{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 4, 9) = String.Format("=STDEV(I2:I{0})", myStudents.Count + 1)
+        '+5 For Min
+        anExcelDoc.Cells(myStudents.Count + 5, 3) = String.Format("=MIN(C2:C{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 5, 4) = String.Format("=MIN(D2:D{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 5, 5) = String.Format("=MIN(E2:E{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 5, 6) = String.Format("=MIN(F2:F{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 5, 7) = String.Format("=MIN(G2:G{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 5, 8) = String.Format("=MIN(H2:H{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 5, 9) = String.Format("=MIN(I2:I{0})", myStudents.Count + 1)
+        '+6 for Max
+        anExcelDoc.Cells(myStudents.Count + 6, 3) = String.Format("=MAX(C2:C{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 6, 4) = String.Format("=MAX(D2:D{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 6, 5) = String.Format("=MAX(E2:E{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 6, 6) = String.Format("=MAX(F2:F{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 6, 7) = String.Format("=MAX(G2:G{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 6, 8) = String.Format("=MAX(H2:H{0})", myStudents.Count + 1)
+        anExcelDoc.Cells(myStudents.Count + 6, 9) = String.Format("=MAX(I2:I{0})", myStudents.Count + 1)
     End Sub
     Public Sub frm1_load(sender As Object, e As EventArgs) Handles Me.Load
         populateList()
         Dim anExcelDoc = getExcelReference()
         loadStudentData(anExcelDoc)
+        putStatisticalFormulas(anExcelDoc)
     End Sub
 End Class
