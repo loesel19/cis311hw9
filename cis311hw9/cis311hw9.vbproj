@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <RootNamespace>cis311hw9</RootNamespace>
     <StartupObject>cis311hw9.Form1</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>

@@ -32,6 +32,7 @@ Public Class Form1
         myStudents.Add(New clsStudent("E.R.", "Manrose", {23, 24, 25, 23}, 84.0))
         myStudents.Add(New clsStudent("W.A.", "Nelson", {23, 24, 25, 23}, 87.0))
         myStudents.Add(New clsStudent("K.U.", "Quaras", {23, 24, 25, 23}, 96.5))
+        myStudents.Add(New clsStudent("A.A.", "Loesel", {23, 25, 25, 25}, 100))
     End Sub
     Public Function getExcelReference()
         Dim CheckExcel As Object
@@ -39,7 +40,7 @@ Public Class Form1
 
         'see if excel is already open
         Try
-            '  CheckExcel = GetObject(, "Excel.Application")
+            CheckExcel = GetObject(, "Excel.Application")
         Catch ex As Exception
 
         End Try
@@ -47,27 +48,18 @@ Public Class Form1
         'see if we found a running instance of excel
         If CheckExcel Is Nothing Then
             anExcelDoc = New Excel.Application()
+
         Else
             anExcelDoc = CheckExcel
+            'excel is already open so we can just add a sheet
+
         End If
 
-        'show excel
-        anExcelDoc.visible = True
 
         'we want to add new workbook and sheet
         anExcelDoc.Workbooks.Add()
         anExcelDoc.Sheets.Add()
 
-        'while here we might as well add the column headers
-        anExcelDoc.Cells(1, 1) = "Initials"
-        anExcelDoc.Cells(1, 2) = "Name"
-        anExcelDoc.Cells(1, 3) = "Grade 1"
-        anExcelDoc.Cells(1, 4) = "Grade 2"
-        anExcelDoc.Cells(1, 5) = "Grade 3"
-        anExcelDoc.Cells(1, 6) = "Grade 4"
-        anExcelDoc.Cells(1, 7) = "Grade Total"
-        anExcelDoc.Cells(1, 8) = "Exam"
-        anExcelDoc.Cells(1, 9) = "Final Grade"
 
 
         Return anExcelDoc
@@ -93,6 +85,18 @@ Public Class Form1
         anExcelDoc.Cells(myStudents.Count + 4, 2) = "St Dev:"
         anExcelDoc.Cells(myStudents.Count + 5, 2) = "Min:"
         anExcelDoc.Cells(myStudents.Count + 6, 2) = "Max:"
+
+        'while here we might as well add the column headers
+        anExcelDoc.Cells(1, 1) = "Initials"
+        anExcelDoc.Cells(1, 2) = "Name"
+        anExcelDoc.Cells(1, 3) = "Grade 1"
+        anExcelDoc.Cells(1, 4) = "Grade 2"
+        anExcelDoc.Cells(1, 5) = "Grade 3"
+        anExcelDoc.Cells(1, 6) = "Grade 4"
+        anExcelDoc.Cells(1, 7) = "Grade Total"
+        anExcelDoc.Cells(1, 8) = "Exam"
+        anExcelDoc.Cells(1, 9) = "Final Grade"
+
     End Sub
 
     Public Sub putStatisticalFormulas(anExcelDoc As Excel.Application)
@@ -129,11 +133,42 @@ Public Class Form1
         anExcelDoc.Cells(myStudents.Count + 6, 7) = String.Format("=MAX(G2:G{0})", myStudents.Count + 1)
         anExcelDoc.Cells(myStudents.Count + 6, 8) = String.Format("=MAX(H2:H{0})", myStudents.Count + 1)
         anExcelDoc.Cells(myStudents.Count + 6, 9) = String.Format("=MAX(I2:I{0})", myStudents.Count + 1)
+
+        'show excel
+        anExcelDoc.Visible = True
     End Sub
-    Public Sub frm1_load(sender As Object, e As EventArgs) Handles Me.Load
-        populateList()
+    Public Sub displayDataList()
+
+        'since we need to format the student data in the listbox we will need to string.format it
+        Dim str As String
+        For Each student As clsStudent In myStudents
+            str = String.Format("{0:10s}{1:16s}{2}{3}",
+                                student.getInitials, student.getLastName, student.getScores(0) & ", " & student.getScores(1) &
+                               ", " & student.getScores(2) & ", " & student.getScores(3), student.getExam)
+            lstStudentData.Items.Add(str)
+        Next
+
+
+    End Sub
+
+    Public Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
+        Dim strScores() = txtScores.Text.Split(",")
+        Dim scores() As Integer = {CInt(strScores(0)), CInt(strScores(1)), CInt(strScores(2)), CInt(strScores(3))}
+        Dim newStudent As New clsStudent(txtInitials.Text, txtLastName.Text, scores, CInt(txtExam.Text))
+        myStudents.Add(newStudent)
+        lstStudentData.Items.Clear()
+        displayDataList()
+
+    End Sub
+    Public Sub btnViewInExcel_Click(sender As Object, e As EventArgs) Handles btnExcel.Click
         Dim anExcelDoc = getExcelReference()
         loadStudentData(anExcelDoc)
         putStatisticalFormulas(anExcelDoc)
+    End Sub
+
+    Public Sub frm1_load(sender As Object, e As EventArgs) Handles Me.Load
+        populateList()
+        Dim anExcelDoc = getExcelReference()
+        displayDataList()
     End Sub
 End Class
