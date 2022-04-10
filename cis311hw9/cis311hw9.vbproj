@@ -44,4 +44,8 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="My Project\" />
+  </ItemGroup>
+
 </Project>

@@ -1,8 +1,54 @@
 ﻿Imports Microsoft.Office.Interop
 Public Class Form1
+    '--------------------------------------------------------------------------------
+    '-                      File Name: Form1                                        -
+    '-                      Part of Project: Excel Linking Application (cis311 HW9) -
+    '--------------------------------------------------------------------------------
+    '-                      Written By: Andrew A. Loesel                            -
+    '-                      Written On: April 7, 2022                               -
+    '--------------------------------------------------------------------------------
+    '- File Purpose:                                                                -
+    '-                                                                              -
+    '- This file contains all functionality of the program. We take care of all I/O -
+    '- in this File. 
+    '--------------------------------------------------------------------------------
+    '- Program Purpose:                                                             -
+    '-                                                                              -
+    '- The purpose of this program is to load some data into a list on the front end-
+    '- and then send that data to an excel sheet. We also will program formulas into-
+    '- the excel sheet to take care of averages, stdevs, min and max for the student-
+    '- scores that we are working with.                                             -
+    '--------------------------------------------------------------------------------
+    '- Global Variable Dictionary (alphabetically):                                 -
+    '- myStudents - a generic list of clsStudents. Holds all the student data we    -
+    '-              work with in this application.                                  -
+    '--------------------------------------------------------------------------------
+
+    'GLOBAL VARIABLES GLOBAL VARIABLES GLOBAL VARIABLES GLOBAL VARIABLES GLOBAL VARIABLES GLOBAL VARIABLES
+    'GLOBAL VARIABLES GLOBAL VARIABLES GLOBAL VARIABLES GLOBAL VARIABLES GLOBAL VARIABLES GLOBAL VARIABLES
+
     Dim myStudents As List(Of clsStudent)
 
+    'SUBPROGRAMS SUBPROGRAMS SUBPROGRAMS SUBPROGRAMS SUBPROGRAMS SUBPROGRAMS SUBPROGRAMS SUBPROGRAMS
+    'SUBPROGRAMS SUBPROGRAMS SUBPROGRAMS SUBPROGRAMS SUBPROGRAMS SUBPROGRAMS SUBPROGRAMS SUBPROGRAMS
     Public Sub populateList()
+        '------------------------------------------------------------------------------
+        '-                      Subprogram Name: populateList                         -
+        '------------------------------------------------------------------------------
+        '-                      Written By: Andrew A. Loesel                          -
+        '-                      Written On: April 7, 2022                             -
+        '------------------------------------------------------------------------------
+        '- Subprogram Purpose:                                                        -
+        '-                                                                            -
+        '- The purpose of this subroutine is to load in some default data to our list -
+        '- of students.                                                               -
+        '------------------------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):                                 -
+        '- None                                                                       -
+        '------------------------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):                                -
+        '- None                                                                       -
+        '------------------------------------------------------------------------------
         'make a new reference for student list
         myStudents = New List(Of clsStudent)
         myStudents.Add(New clsStudent("V.A.", "Borstellis", {25, 25, 25, 25}, 100.0))
@@ -35,6 +81,25 @@ Public Class Form1
         myStudents.Add(New clsStudent("A.A.", "Loesel", {23, 25, 25, 25}, 100))
     End Sub
     Public Function getExcelReference()
+        '------------------------------------------------------------------------------
+        '-                      Subprogram Name: getExcelReference                    -
+        '------------------------------------------------------------------------------
+        '-                      Written By: Andrew A. Loesel                          -
+        '-                      Written On: April 7, 2022                             -
+        '------------------------------------------------------------------------------
+        '- Subprogram Purpose:                                                        -
+        '-                                                                            -
+        '- The purpose of this subroutine is to see if excel is already in the device -
+        '- memory. If it is we grab that reference, if not we create a new one. We    -
+        '- then add a new workbook and sheet to excel to display our new data.        -
+        '------------------------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):                                 -
+        '- None                                                                       -
+        '------------------------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):                                -
+        '- anExcelDoc - a reference to the excel application that we will work with.  -
+        '- checkExcel - the object we try to grab an existing excel application with. -
+        '------------------------------------------------------------------------------
         Dim CheckExcel As Object
         Dim anExcelDoc As Excel.Application
 
@@ -65,6 +130,27 @@ Public Class Form1
         Return anExcelDoc
     End Function
     Public Sub loadStudentData(anExcelDoc As Excel.Application)
+        '------------------------------------------------------------------------------
+        '-                      Subprogram Name: loadStudentData                      -
+        '------------------------------------------------------------------------------
+        '-                      Written By: Andrew A. Loesel                          -
+        '-                      Written On: April 7, 2022                             -
+        '------------------------------------------------------------------------------
+        '- Subprogram Purpose:                                                        -
+        '-                                                                            -
+        '- This subprograms purpose is to load student data into the excel sheet. We  -
+        '- first loop through all of our students and programatically add their data  -
+        '- into the corresponding cells. We then add some headers in fixed positions  -
+        '- on the excel sheet.                                                        -
+        '------------------------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):                                 -
+        '- anExcelDoc - a reference to the excel object that we will be adding data   -
+        '- to.                                                                        -
+        '------------------------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):                                -
+        '- currStudent - the Current clsStudent whose data we are putting in the cells-
+        '-               of our excel page in the for loop.                           -
+        '------------------------------------------------------------------------------
         'loop through each student in the list, we start at 2 for our loop counter since that will be the row
         'we start entering data at. We then can just use our getter methods to get that data and place it in the cells
         'the total grade and final grade are both functions that we place in the cells
@@ -100,6 +186,25 @@ Public Class Form1
     End Sub
 
     Public Sub putStatisticalFormulas(anExcelDoc As Excel.Application)
+        '------------------------------------------------------------------------------
+        '-                      Subprogram Name: putStatisticalFormulas               -
+        '------------------------------------------------------------------------------
+        '-                      Written By: Andrew A. Loesel                          -
+        '-                      Written On: April 7, 2022                             -
+        '------------------------------------------------------------------------------
+        '- Subprogram Purpose:                                                        -
+        '-                                                                            -
+        '- The porpose of this subprogram is to put excel formulas in the proper cells-
+        '- so that excel can handle average, standard deviation, min and max calculati-
+        '- ons for us directly on the sheet. We then make the sheet visible.          -
+        '------------------------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):                                 -
+        '- anExcelDoc - a reference to the excel object that we will be adding data   -
+        '- to.                                                                        -
+        '------------------------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):                                -
+        '- None                                                                       -
+        '------------------------------------------------------------------------------
         'add in average, stdev, min and max functions in the corresponding cells
         'all + 3 rows are for average
         anExcelDoc.Cells(myStudents.Count + 3, 3) = String.Format("=AVERAGE(C2:C{0})", myStudents.Count + 1)
@@ -138,11 +243,32 @@ Public Class Form1
         anExcelDoc.Visible = True
     End Sub
     Public Sub displayDataList()
-
+        '------------------------------------------------------------------------------
+        '-                      Subprogram Name: displayDataList                      -
+        '------------------------------------------------------------------------------
+        '-                      Written By: Andrew A. Loesel                          -
+        '-                      Written On: April 7, 2022                             -
+        '------------------------------------------------------------------------------
+        '- Subprogram Purpose:                                                        -
+        '-                                                                            -
+        '- The purpose of this subprogram is display all the students in myStudents   -
+        '- in our listbox. We change the listbox font to a monospace font where every -
+        '- character is the same width. We then loop through each student and add     -
+        '- their information to a formatted string which is then added to our listbox -
+        '- items.                                                                     -
+        '------------------------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):                                 -
+        '- None                                                                       -
+        '------------------------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):                                -
+        '- str - this will be a formatted string that we will add to the listbox.     -
+        '------------------------------------------------------------------------------
+        'change font of listbox to a monospace font like Consolas to make the listbox look tidier
+        lstStudentData.Font = New Font("Consolas", 12, FontStyle.Regular)
         'since we need to format the student data in the listbox we will need to string.format it
         Dim str As String
         For Each student As clsStudent In myStudents
-            str = String.Format("{0:10s}{1:16s}{2}{3}",
+            str = String.Format("{0,-4}   {1,-12}{2,-17}{3,-3}",
                                 student.getInitials, student.getLastName, student.getScores(0) & ", " & student.getScores(1) &
                                ", " & student.getScores(2) & ", " & student.getScores(3), student.getExam)
             lstStudentData.Items.Add(str)
@@ -152,21 +278,97 @@ Public Class Form1
     End Sub
 
     Public Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
-        Dim strScores() = txtScores.Text.Split(",")
-        Dim scores() As Integer = {CInt(strScores(0)), CInt(strScores(1)), CInt(strScores(2)), CInt(strScores(3))}
-        Dim newStudent As New clsStudent(txtInitials.Text, txtLastName.Text, scores, CInt(txtExam.Text))
-        myStudents.Add(newStudent)
-        lstStudentData.Items.Clear()
-        displayDataList()
+        '------------------------------------------------------------------------------
+        '-                      Subprogram Name: btnAdd_Click                         -
+        '------------------------------------------------------------------------------
+        '-                      Written By: Andrew A. Loesel                          -
+        '-                      Written On: April 7, 2022                             -
+        '------------------------------------------------------------------------------
+        '- Subprogram Purpose:                                                        -
+        '-                                                                            -
+        '- The purpose of this subprogram is to add a new student into our list and   -
+        '- make sure their data is displayed and used in excel. We first try to create-
+        '- a new student object from the textbox values, if an exception is triggered -
+        '- during this we print out a message to tell the user to use the specified   -
+        '- format in the textbox hints. We then clear all of our textboxes.           -
+        '------------------------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):                                 -
+        '- sender - identifies which control used the event.                          -
+        '- e - Holds the EventArgs object sent to the routine.                        -
+        '------------------------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):                                -
+        '- newStudent - this is a clsStudent object that we want to add to our list.  -
+        '- scores() - an integer array of the students homework scores.               -
+        '- strScores() - a string array that we get from splitting the textbox for    -
+        '-               score input by comma.                                        -
+        '------------------------------------------------------------------------------
+        Try
+            Dim strScores() = txtScores.Text.Split(",")
+            Dim scores() As Integer = {CInt(strScores(0)), CInt(strScores(1)), CInt(strScores(2)), CInt(strScores(3))}
+            Dim newStudent As New clsStudent(txtInitials.Text, txtLastName.Text, scores, CInt(txtExam.Text))
+            myStudents.Add(newStudent)
+            lstStudentData.Items.Clear()
+            displayDataList()
+        Catch ex As Exception
+            MessageBox.Show("input in the format specified by the hints.", "Incorrect Input")
+        End Try
+        'clear textboxes
+        txtInitials.Clear()
+        txtLastName.Clear()
+        txtScores.Clear()
+        txtExam.Clear()
+
 
     End Sub
     Public Sub btnViewInExcel_Click(sender As Object, e As EventArgs) Handles btnExcel.Click
+        '------------------------------------------------------------------------------
+        '-                      Subprogram Name: btnViewInExcel_Click                 -
+        '------------------------------------------------------------------------------
+        '-                      Written By: Andrew A. Loesel                          -
+        '-                      Written On: April 7, 2022                             -
+        '------------------------------------------------------------------------------
+        '- Subprogram Purpose:                                                        -
+        '-                                                                            -
+        '- The purpose of this subprogram is to open up the excel document that we    -
+        '- have a reference to. so we first get that reference, then we load the      -
+        '- student data into the sheet, and then we put the formulas in the sheet.    -
+        '- putStatisticalFormulas() will make the sheet visible.                      -
+        '------------------------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):                                 -
+        '- sender - identifies which control used the event.                          -
+        '- e - Holds the EventArgs object sent to the routine.                        -
+        '------------------------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):                                -
+        '- anExcelDoc - a reference to the excel object that we will be adding data   -
+        '- to.                                                                        -
+        '------------------------------------------------------------------------------
         Dim anExcelDoc = getExcelReference()
         loadStudentData(anExcelDoc)
         putStatisticalFormulas(anExcelDoc)
     End Sub
 
     Public Sub frm1_load(sender As Object, e As EventArgs) Handles Me.Load
+        '------------------------------------------------------------------------------
+        '-                      Subprogram Name: frm1_load                            -
+        '------------------------------------------------------------------------------
+        '-                      Written By: Andrew A. Loesel                          -
+        '-                      Written On: April 7, 2022                             -
+        '------------------------------------------------------------------------------
+        '- Subprogram Purpose:                                                        -
+        '-                                                                            -
+        '- The purpose of this subprogram is to control the program when the form laod-
+        '- s. We just call populateList to get our student data loaded into the list. -
+        '- we then get an excel reference and display the list data in the listbox    -
+        '- by calling displayDataList.                                                -
+        '------------------------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):                                 -
+        '- sender - identifies which control used the event.                          -
+        '- e - Holds the EventArgs object sent to the routine.                        -
+        '------------------------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):                                -
+        '- anExcelDoc - a reference to the excel object that we will be adding data   -
+        '- to.                                                                        -
+        '------------------------------------------------------------------------------
         populateList()
         Dim anExcelDoc = getExcelReference()
         displayDataList()

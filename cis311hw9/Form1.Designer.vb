@@ -41,7 +41,7 @@ Partial Class Form1
         Me.lstStudentData.ItemHeight = 15
         Me.lstStudentData.Location = New System.Drawing.Point(7, 44)
         Me.lstStudentData.Name = "lstStudentData"
-        Me.lstStudentData.Size = New System.Drawing.Size(371, 124)
+        Me.lstStudentData.Size = New System.Drawing.Size(405, 124)
         Me.lstStudentData.TabIndex = 0
         '
         'Label1
@@ -65,7 +65,7 @@ Partial Class Form1
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(169, 26)
+        Me.Label3.Location = New System.Drawing.Point(185, 26)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(40, 15)
         Me.Label3.TabIndex = 3
@@ -93,28 +93,28 @@ Partial Class Form1
         Me.txtLastName.Location = New System.Drawing.Point(90, 185)
         Me.txtLastName.Name = "txtLastName"
         Me.txtLastName.PlaceholderText = "Last name ""smith"""
-        Me.txtLastName.Size = New System.Drawing.Size(96, 23)
+        Me.txtLastName.Size = New System.Drawing.Size(123, 23)
         Me.txtLastName.TabIndex = 6
         '
         'txtScores
         '
-        Me.txtScores.Location = New System.Drawing.Point(192, 185)
+        Me.txtScores.Location = New System.Drawing.Point(219, 185)
         Me.txtScores.Name = "txtScores"
-        Me.txtScores.PlaceholderText = "scores ""{0, 25, 22, 22}"""
-        Me.txtScores.Size = New System.Drawing.Size(100, 23)
+        Me.txtScores.PlaceholderText = "scores ""0, 25, 22, 22"""
+        Me.txtScores.Size = New System.Drawing.Size(118, 23)
         Me.txtScores.TabIndex = 7
         '
         'txtExam
         '
-        Me.txtExam.Location = New System.Drawing.Point(301, 185)
+        Me.txtExam.Location = New System.Drawing.Point(343, 185)
         Me.txtExam.Name = "txtExam"
         Me.txtExam.PlaceholderText = "exam ""100"""
-        Me.txtExam.Size = New System.Drawing.Size(67, 23)
+        Me.txtExam.Size = New System.Drawing.Size(69, 23)
         Me.txtExam.TabIndex = 8
         '
         'btnAdd
         '
-        Me.btnAdd.Location = New System.Drawing.Point(72, 227)
+        Me.btnAdd.Location = New System.Drawing.Point(104, 227)
         Me.btnAdd.Name = "btnAdd"
         Me.btnAdd.Size = New System.Drawing.Size(105, 23)
         Me.btnAdd.TabIndex = 9
@@ -123,7 +123,7 @@ Partial Class Form1
         '
         'btnExcel
         '
-        Me.btnExcel.Location = New System.Drawing.Point(187, 227)
+        Me.btnExcel.Location = New System.Drawing.Point(219, 227)
         Me.btnExcel.Name = "btnExcel"
         Me.btnExcel.Size = New System.Drawing.Size(105, 23)
         Me.btnExcel.TabIndex = 10
@@ -134,7 +134,7 @@ Partial Class Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(390, 447)
+        Me.ClientSize = New System.Drawing.Size(424, 447)
         Me.Controls.Add(Me.btnExcel)
         Me.Controls.Add(Me.btnAdd)
         Me.Controls.Add(Me.txtExam)
